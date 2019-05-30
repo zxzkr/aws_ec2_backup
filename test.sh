@@ -33,10 +33,7 @@ aws ec2 --region $1 describe-instances --filters "Name=instance-state-name,Value
 printf "%-25s %-15s %-21s %-20s\n" "Hostname" "Private IP" "AMI ID" "Key pair name"
 echo "------------------------- --------------- --------------------- ---------------"
 while read ec2_hostname ec2_pri_ip ec2_ami_id ec2_key_name; do
-#	echo "$A $B $C $D"
-#while read LINE; do
 #	for i in $running_ec2_list;do
-	#echo $LINE
 	case $ec2_ami_id in
 		ami-078e96948945fc2c9)
 			ec2_user="ubuntu";;
@@ -55,7 +52,7 @@ while read ec2_hostname ec2_pri_ip ec2_ami_id ec2_key_name; do
 	esac
 	printf "%-25s %-15s %-21s %-20s" $ec2_hostname $ec2_pri_ip $ec2_ami_id $ec2_key_name $ec2_user $key_pair
 	echo ""
-	ssh -oStrictHostKeyChecking=no -i /data_backup/key/$key_pair $ec2_user@$ec2_pri_ip 'ls -al /data'
+	ssh -oStrictHostKeyChecking=no -i /data_backup/key/$key_pair $ec2_user@$ec2_pri_ip 'ls -al /data' < /dev/null
 done < $running_ec2_list
 #for i in {196..201} {201..196} ; do echo -en "\e[48;5;${i}m M Z C\e[0m" ; done ; echo
 
