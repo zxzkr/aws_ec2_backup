@@ -1,0 +1,19 @@
+#!
+
+#output value default json
+--output table / text / json 
+
+# Private IP List
+aws ec2 describe-instances --query "Reservations[].Instances[].PrivateIpAddress"
+aws ec2 describe-instances --query "Reservations[].Instances[].PrivateIpAddress" --output text | sed -e "s/\t/\n/g"
+
+# running instance IP List
+aws ec2 describe-instances --filters "Name=instance-state-name,Values=running" --query "Reservations[].Instances[].PrivateIpAddress" --output text | sed -e "s/\t/\n/g"
+
+# stopped instance List
+aws ec2 describe-instances --filters "Name=instance-state-name,Values=stopped" --query "Reservations[].Instances[].InstanceId"
+
+
+#### region list
+aws ec2 describe-regions --output text | cut -f3
+
