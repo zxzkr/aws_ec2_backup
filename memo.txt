@@ -17,3 +17,5 @@ aws ec2 describe-instances --filters "Name=instance-state-name,Values=stopped" -
 #### region list
 aws ec2 describe-regions --output text | cut -f3
 
+####echo >> Hostname, Private IP, AMI ID, key pair #### 
+aws ec2 --region $1 describe-instances --filters "Name=instance-state-name,Values=running"  --query 'Reservations[*].Instances[*].[Tags[?Key==`Name`]|[0].Value,PrivateIpAddress,ImageId,KeyName]' --output=text
