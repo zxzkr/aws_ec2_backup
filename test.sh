@@ -15,6 +15,7 @@ running_ec2_list=list_${region}.txt
 #mzdev-dmz="./key/dmz"
 #
 ######## Amazon AMI  #########
+
 #ami-078e96948945fc2c9="ubuntu"
 #ami-067c32f3d5b9ace91="ubuntu"
 #ami-06cf2a72dadf92410="centos"
@@ -28,19 +29,35 @@ aws ec2 --region $1 describe-instances --filters "Name=instance-state-name,Value
 
 
 
-for i in {196..201} {201..196} ; do echo -en "\e[48;5;${i}m M Z C\e[0m" ; done ; echo
+#for i in {196..201} {201..196} ; do echo -en "\e[48;5;${i}m M Z C\e[0m" ; done ; echo
 printf "%-25s %-15s %-21s %-20s\n" "Hostname" "Private IP" "AMI ID" "Key pair name"
 echo "------------------------- --------------- --------------------- ---------------"
-while read LINE; do
+while read ec2_hostname ec2_pri_ip ec2_ami_id ec2_key_name; do
+#	echo "$A $B $C $D"
+#while read LINE; do
+#	for i in $running_ec2_list;do
 	#echo $LINE
-	ec2_hostname=$(echo $LINE | awk '{print $1}')
-	ec2_pri_ip=$(echo $LINE | awk '{print $2}')
-	ec2_ami_id=$(echo $LINE | awk '{print $3}')
-	ec2_key_name=$(echo $LINE | awk '{print $4}')
-	printf "%-25s %-15s %-21s %-20s" $ec2_hostname $ec2_pri_ip $ec2_ami_id $ec2_key_name
+	case $ec2_ami_id in
+		ami-078e96948945fc2c9)
+			ec2_user="ubuntu";;
+		ami-067c32f3d5b9ace91)
+			ec2_user="ubuntu";;
+		ami-06cf2a72dadf92410)
+			ec2_user="cetnos";;
+	esac
+	case $ec2_key_name in
+		mzdev-public)
+			key_pair="pub";;
+		mzdev-private)
+			key_pair="pri";;
+		mzdev-dmz)
+			key_pair="dmz";;
+	esac
+	printf "%-25s %-15s %-21s %-20s" $ec2_hostname $ec2_pri_ip $ec2_ami_id $ec2_key_name $ec2_user $key_pair
 	echo ""
+	ssh -oStrictHostKeyChecking=no -i /data_backup/key/$key_pair $ec2_user@$ec2_pri_ip 'ls -al /data'
 done < $running_ec2_list
-for i in {196..201} {201..196} ; do echo -en "\e[48;5;${i}m M Z C\e[0m" ; done ; echo
+#for i in {196..201} {201..196} ; do echo -en "\e[48;5;${i}m M Z C\e[0m" ; done ; echo
 
 
 ############ clear file
