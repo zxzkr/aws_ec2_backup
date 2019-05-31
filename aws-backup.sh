@@ -76,7 +76,7 @@ ssh_remote_backup(){
 
 #test_line
 list_check(){
-	if [ $backuprun == "copy" ]||[ $backuprun == "zip" ]; then 
+	if [[ $backuprun == "copy" ]]||[[ $backuprun == "zip" ]]; then 
 		clear
 		logo_line
 	else
